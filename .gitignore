@@ -1,0 +1,21 @@
+# 密钥与本地配置（含 api_key，禁止提交）
+api_config.json
+profiles.json
+.env
+*.pem
+*.key
+
+# 运行日志（含划词内容）
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
