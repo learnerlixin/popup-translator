@@ -2,13 +2,13 @@
 
 在任意 Windows 软件中选中英文句子 → 按快捷键 → 鼠标旁弹出中文翻译 + 重点词汇卡片。
 
-> 项目路径：`E:\vscode代码\AI_coding\popup-translator\`
+> 仅支持 Windows（依赖 UIA / Win32 全局钩子）。下文命令均在项目根目录执行。
 
 ## 特性
 
 - **全局生效**：浏览器、PDF、Word、终端……任何能选文字的地方都能用
 - **默认快捷键**：双击 `Ctrl+C`（习惯跟有道词典一致），支持自定义
-- **翻译引擎自动跟随**：读取 `C:/Users/qweli/.claude/api-profiles/profiles.json` 中的当前档案，`/switch-api use xxx` 切换后无需重启本工具
+- **翻译引擎自动跟随**：读取 `~/.claude/api-profiles/profiles.json` 中的当前档案，`/switch-api use xxx` 切换后无需重启本工具
 - **卡片内容**：
   - 整句中文翻译（保持学术语体）
   - 重点词汇：音标 / 词性 / 语境含义
@@ -20,14 +20,22 @@
 ### 1. 安装依赖
 
 ```powershell
-E:\Python310\python.exe -m pip install -r E:\vscode代码\AI_coding\popup-translator\requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-（已安装：keyboard、mouse、requests）
+（依赖：keyboard、mouse、requests；UIA 取词还需 comtypes）
 
 ### 2. 启动
 
-**双击** `E:\vscode代码\AI_coding\popup-translator\启动划词翻译.vbs`
+```powershell
+pythonw popup_translator.py
+```
+
+若想无控制台窗口地双击启动，可自建一个 `启动划词翻译.vbs`：
+
+```vbs
+CreateObject("Wscript.Shell").Run "pythonw popup_translator.py", 0, False
+```
 
 右下角会弹出 toast 提示 "划词翻译已启动 · 选中文字后按 CTRL+C, CTRL+C"。
 
@@ -44,7 +52,7 @@ E:\Python310\python.exe -m pip install -r E:\vscode代码\AI_coding\popup-transl
 
 ### 4. 设置开机自启
 
-按 `Win + R` 输入 `shell:startup` 回车，把 `E:\vscode代码\AI_coding\popup-translator\启动划词翻译.vbs` 的快捷方式丢进去即可。
+按 `Win + R` 输入 `shell:startup` 回车，把上面那个 `启动划词翻译.vbs` 的快捷方式丢进去即可。
 
 ## API 密钥配置
 
@@ -68,7 +76,7 @@ copy api_config.example.json api_config.json
 
 ## 配置
 
-编辑 `E:\vscode代码\AI_coding\popup-translator\config.json`：
+编辑项目根目录下的 `config.json`：
 
 | 字段 | 默认值 | 说明 |
 |---|---|---|
@@ -77,7 +85,7 @@ copy api_config.example.json api_config.json
 | `max_vocabulary` | `6` | 每个弹窗最多显示几个重点词 |
 | `timeout` | `30` | API 请求超时秒数 |
 | `window_width` | `440` | 弹窗宽度（像素）|
-| `profiles_path` | `C:/Users/qweli/.claude/api-profiles/profiles.json` | API 档案路径 |
+| `profiles_path` | `~/.claude/api-profiles/profiles.json` | API 档案路径，支持 `~` 与 `%VAR%` 展开 |
 
 ## 故障排查
 
@@ -97,9 +105,13 @@ copy api_config.example.json api_config.json
 
 ```
 popup-translator/
-├── popup_translator.py     # 主程序
-├── config.json             # 配置
-├── requirements.txt        # 依赖
-├── 启动划词翻译.vbs         # 启动脚本（无控制台窗口）
-└── README.md               # 本文件
+├── popup_translator.py        # 主程序
+├── config.json                # 行为配置（快捷键、弹窗等）
+├── api_config.example.json    # API 配置模板（复制为 api_config.json 并填入密钥）
+├── requirements.txt           # 依赖
+├── generate_uia.py            # 生成 comtypes UIA 类型库（首次运行前执行）
+├── check_uia.py / list_uia.py / test_uia.py  # UIA 取词调试脚本
+└── README.md                  # 本文件
 ```
+
+> `api_config.json`、`translator.log`、`__pycache__/` 已在 `.gitignore` 中，不会入库。

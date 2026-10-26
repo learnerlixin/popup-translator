@@ -4,5 +4,5 @@
   "max_vocabulary": 6,
   "timeout": 30,
   "window_width": 440,
-  "profiles_path": "C:/Users/qweli/.claude/api-profiles/profiles.json"
+  "profiles_path": "~/.claude/api-profiles/profiles.json"
 }

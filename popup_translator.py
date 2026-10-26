@@ -198,7 +198,7 @@ DEFAULT_CONFIG = {
     'auto_close_seconds': 25,
     'max_vocabulary': 6,
     'timeout': 30,
-    'profiles_path': 'C:/Users/qweli/.claude/api-profiles/profiles.json',
+    'profiles_path': '~/.claude/api-profiles/profiles.json',
     'window_width': 440,
 }
 
@@ -486,7 +486,7 @@ def load_active_api(cfg):
             print(f"[API] 读取 api_config.json 失败: {e}")
 
     # 回退到 profiles.json
-    path = cfg['profiles_path']
+    path = os.path.expanduser(os.path.expandvars(cfg['profiles_path']))
     if not os.path.isfile(path):
         raise RuntimeError(f'找不到 API 配置文件：\n{path}\n请先配置 api_config.json 或 /switch-api')
     with open(path, encoding='utf-8') as f:
