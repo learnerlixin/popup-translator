@@ -46,6 +46,26 @@ E:\Python310\python.exe -m pip install -r E:\vscode代码\AI_coding\popup-transl
 
 按 `Win + R` 输入 `shell:startup` 回车，把 `E:\vscode代码\AI_coding\popup-translator\启动划词翻译.vbs` 的快捷方式丢进去即可。
 
+## API 密钥配置
+
+密钥**不入库**（`api_config.json` 已在 `.gitignore` 中）。克隆后需自行创建：
+
+```powershell
+copy api_config.example.json api_config.json
+```
+
+然后编辑 `api_config.json` 填入自己的 `api_key`：
+
+```json
+{
+  "base_url": "https://api.deepseek.com/anthropic",
+  "api_key": "你的 API Key",
+  "model": "deepseek-v4-flash"
+}
+```
+
+若没有 `api_config.json`，程序会回退读取 `config.json` 中 `profiles_path` 指向的档案文件。
+
 ## 配置
 
 编辑 `E:\vscode代码\AI_coding\popup-translator\config.json`：
